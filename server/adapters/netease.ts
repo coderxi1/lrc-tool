@@ -104,7 +104,7 @@ export const search = async (query: SearchRequestQuery): Promise<SearchResult> =
     }
     case 'keyword':
     default: {
-      return query.NETEASE_MUSIC_U ? await searchSongsByKeyword(query.keyword, query.NETEASE_MUSIC_U,query.pn,query.ps) : {}
+      return query.NETEASE_MUSIC_U ? await searchSongsByKeyword(query.keyword, `MUSIC_U=${query.NETEASE_MUSIC_U};`,query.pn,query.ps) : {}
     }
   }
 }
