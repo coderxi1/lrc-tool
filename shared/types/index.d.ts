@@ -13,10 +13,10 @@ type Playlist = {
   description: string
 }
 
-type WithSongs<T> = {
-  songs: Song[],
-  songsTotal: number
-} | T
+type WithSongs<T> = T & {
+  songs?: Song[]
+  songsTotal?: number
+}
 
 type Song = {
   plaform: Platform   // 源平台
@@ -34,9 +34,4 @@ type Lyrics = {
   original: string     // 原文歌词
   translation: string  // 翻译歌词
   romanization: string // 罗马拼音
-}
-
-type PageResult<T> = {
-  ps: number,
-  pn: number,
 }
