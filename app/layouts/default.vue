@@ -1,9 +1,17 @@
+<script setup lang="ts">
+import Navbar from '~/components/Navbar.vue';
+</script>
+
 <template>
-  <div class="bg-global">
-    <div class="header">header</div>
-    <div class="main">
+  <div class="min-h-screen w-full max-w-1000px flex flex-col m-auto">
+    <header class="w-full">
+      <Navbar/>
+    </header>
+    <main class="w-full flex-1 px-1">
       <slot></slot>
-    </div>
-    <div class="footer">footer</div>
+    </main>
+    <footer class="w-full text-center">
+      <p>Copyright © 2025 - 2025 汐涌及岸</p>
+    </footer>
   </div>
 </template>

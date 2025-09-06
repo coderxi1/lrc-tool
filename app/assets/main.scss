@@ -1,3 +1,9 @@
 html {
   font-size: 16px;
 }
+body {
+  background: #f0f2f4;
+  .dark & {
+    background: #191919;
+  }
+}

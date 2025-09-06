@@ -6,7 +6,15 @@ export default defineNuxtConfig({
     '@unocss/nuxt',
     '@pinia/nuxt'
   ],
-  icon: { localApiEndpoint: '/nuxt-icon' },
+  icon: { 
+    customCollections: [
+      {
+        prefix: 'custom',
+        dir: './app/assets/icons',
+      },
+    ],
+    localApiEndpoint: '/nuxt-icon',
+  },
   css: [
     '@unocss/reset/tailwind.css',
     "~/assets/main.scss",
@@ -20,4 +28,5 @@ export default defineNuxtConfig({
       ],
     },
   },
+  
 })
