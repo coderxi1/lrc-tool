@@ -1,0 +1,13 @@
+{
+  "headers": [
+    {
+      "source": "/api/platform/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "max-age=60, s-maxage=7200, stale-while-revalidate=3600"
+        }
+      ]
+    }
+  ]
+}
