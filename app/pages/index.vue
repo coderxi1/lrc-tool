@@ -8,6 +8,10 @@
       :dropdown-options="Object.values(platforms).map(p => ({ value: p.name, label: p.label, icon: p.icon }))"
       v-model="input"
       @search="doSearch" />
+    <div class="flex justify-center gap-4 mt7 text-sm">
+      <button class="bg-#fff shadow-sm b b-transparent hover:b-#ddd dark:hover:b-#666 dark:bg-#303134 transition-[border-color] py2 px4 rounded-lg" @click="doSearch">搜索歌词</button>
+      <button class="bg-#fff shadow-sm b b-transparent hover:b-#ddd dark:hover:b-#666 dark:bg-#303134 transition-[border-color] py2 px4 rounded-lg" @click="useRouter().push('/editor')">编辑歌词</button>
+    </div>
     <Transition enter-active-class="transition-all duration-400 ease-in-out" enter-from-class="opacity-0 translate-y-2"
       enter-to-class="opacity-100 translate-y-0" leave-active-class="transition-all duration-400 ease-in-out"
       leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 -translate-y-2">
@@ -76,7 +80,7 @@ const btns: SimpleBtn[] = [
       el.disabled = true
       const lyrics = await platform.value.getLyricsBySongId(song.platformId)
       el.disabled = false
-      const modal = useModal({ component: ModalLyricsPreview, attrs: { lyrics, song } })
+      const modal = useModal({ component: ModalLyricsPreview, attrs: { lyrics, song, close:()=>modal.close() } })
       modal.open()
     }
   }
