@@ -10,8 +10,8 @@ import Navbar from '~/components/Navbar.vue';
     <main class="w-full flex-1 px-1">
       <slot></slot>
     </main>
-    <footer class="w-full text-center">
-      <p>Copyright © 2025 - 2025 汐涌及岸</p>
+    <footer class="w-full text-center py8">
+      <p>Copyright © 2025 ~ 2025 By 汐涌及岸. All rights reserved.</p>
     </footer>
   </div>
 </template>
