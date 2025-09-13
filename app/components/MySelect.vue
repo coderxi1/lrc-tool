@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue';
-
 interface Option {
   label: string;
   value: string;

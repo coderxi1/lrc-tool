@@ -3,11 +3,11 @@ import Navbar from '~/components/Navbar.vue';
 </script>
 
 <template>
-  <div class="min-h-screen w-full max-w-1000px flex flex-col m-auto text-dark dark:text-light">
-    <header class="w-full">
+  <div class="min-h-screen w-full flex flex-col text-dark dark:text-light">
+    <header class="w-full max-w-1000px m-auto">
       <Navbar/>
     </header>
-    <main class="w-full flex-1 px-1">
+    <main class="w-full flex-1 px-1 m-auto flex flex-col">
       <slot></slot>
     </main>
     <footer class="w-full text-center text-sm py8">

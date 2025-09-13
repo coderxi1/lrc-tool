@@ -12,7 +12,10 @@ export class LyricFile {
 
 export const useEditorStore = defineStore('editor', {
   state: () => ({
-    lyricFiles: [] as LyricFile[],
+    lyricFiles: [
+      {name:'忘れじの言の葉'},
+      {name:'我将在何处游荡'},
+    ] as LyricFile[],
   }),
   actions: {
     newLyricFile(id:string, name: string, lrc: string) {

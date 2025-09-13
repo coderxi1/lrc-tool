@@ -1,67 +1,43 @@
 <script setup lang="ts">
-import { ref, watch, nextTick, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
 import { useEditorStore, LyricFile } from '@/stores/editor'
 
 const editorStore = useEditorStore()
-const route = useRoute()
-
-// 当前选中的文件 ID
-const currentFileId = ref<string | null>(null)
-const currentFile = ref<LyricFile | null>(null)
-
-// textarea 的 ref
-const textareaRef = ref<HTMLTextAreaElement | null>(null)
-
-// 初始化选中文件
-onMounted(() => {
-  const id = route.query.id as string | undefined
-  if (id) {
-    currentFileId.value = id
-  }
-})
-
-// 当选中 ID 改变时更新 currentFile
-watch(currentFileId, async (id) => {
-  currentFile.value = editorStore.lyricFiles.find(f => f.id === id) || null
-  await nextTick()
-  if (textareaRef.value) {
-    textareaRef.value.focus()
-    textareaRef.value.selectionStart = textareaRef.value.selectionEnd = textareaRef.value.value.length
-  }
-})
+const activeTab = ref(1)
 </script>
 
 <template>
-  <div class="flex h-screen p-4 gap-4 border rounded-lg dark:border-gray-600 dark:bg-gray-900">
-    <!-- 左侧文件列表 -->
-    <div class="w-1/4 border-r border-gray-300 pr-2 dark:border-gray-700">
-      <h2 class="font-bold mb-2 text-gray-800 dark:text-gray-200">歌词文件</h2>
-      <div v-for="file in editorStore.lyricFiles" :key="file.id" class="mb-2">
-        <button
-          class="w-full text-left p-2 border rounded hover:bg-gray-100 dark:hover:bg-gray-800"
-          :class="{'bg-gray-200 dark:bg-gray-700': currentFileId === file.id, 'text-gray-900 dark:text-gray-100': true}"
-          @click="currentFileId = file.id"
-        >
-          {{ file.name }}
-        </button>
+  <div class="wfull max-w-1400px m-auto flex flex-1 rounded-lg b dark:b-#333 bg-white dark:bg-#181818 overflow-hidden">
+    <!-- 歌词列表 -->
+    <div class="min-w-16em flex flex-col b-r bg-#f5f5f5 dark:b-#333 dark:bg-#181818">
+      <div class="font-bold h12 px-4 lh-12 b-b-1 dark:b-#222">歌词列表</div>
+      <div class="flex flex-col py2">
+        <input class="w-full text-left cursor-pointer pl-4 py1.5 hover:bg-black/10 dark:hover:bg-white/8"
+               type="button" v-for="file in editorStore.lyricFiles" :key="file.name" :value="file.name">
       </div>
     </div>
 
-    <!-- 右侧编辑区 -->
-    <div class="flex-1 flex flex-col">
-      <h2 class="font-bold mb-2 text-gray-800 dark:text-gray-200">编辑歌词</h2>
-      <textarea
-        v-if="currentFile"
-        ref="textareaRef"
-        v-model="currentFile.lrc"
-        class="w-full h-full border rounded p-2 resize-none
-               border-gray-300 dark:border-gray-600
-               bg-white dark:bg-gray-800
-               text-gray-900 dark:text-gray-100
-               focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500"
-      ></textarea>
-      <div v-else class="text-gray-400 dark:text-gray-500">请选择左侧文件进行编辑</div>
+    <!-- 编辑区 -->
+    <div class="flex-1 flex flex-col dark:bg-#1F1F1F">
+      <div class="tab-btns flex h12 bg-#f5f5f5 dark:bg-#181818">
+        <button class="flex h12 gap2 items-center px7 b-b b-r dark:b-#333" @click="activeTab = 1" :class="{ active: activeTab === 1 }"><Icon class="w6 h6" name="mdi:text-box-edit-outline"/>文本</button>
+        <button class="flex h12 gap2 items-center px7 b-b b-r dark:b-#333" @click="activeTab = 2" :class="{ active: activeTab === 2 }"><Icon class="w6 h6" name="mdi:playlist-plus"/>打轴</button>
+        <button class="flex h12 gap2 items-center px7 b-b b-r dark:b-#333" @click="activeTab = 3" :class="{ active: activeTab === 3 }"><Icon class="w6 h6" name="mdi:credit-card-edit-outline"/>调整</button>
+        <div class="flex-1 b-b dark:b-#333"></div>
+      </div>
+      <div class="p4">
+        <div v-show="activeTab === 1">文本编辑器</div>
+        <div v-show="activeTab === 2">打轴编辑器</div>
+        <div v-show="activeTab === 3">调整编辑器</div>
+      </div>
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.tab-btns {
+  button.active {
+    border-bottom: 0;
+    background: #1F1F1F;
+  }
+}
+</style>
