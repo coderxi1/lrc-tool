@@ -91,10 +91,11 @@ const save = async () => saveTextAsFile(textareaValue.value || '', {
 })
 
 const toEditor = () => {
-  const id = `${props.song.platform}${props.song.platformId}`.toUpperCase()
+  const name = props.song.name || `${props.song.platform}${props.song.platformId}`.toUpperCase()
   const editorStore = useEditorStore()
-  editorStore.newLyricFile(id, `${props.song.artists?.join(',')} - ${props.song.title}`, lrcValue.value)
-  useRouter().push('/editor?id=' + id)
+  editorStore.newLyricFile(name, lrcValue.value)
+  useRouter().push('/editor?file=' + name)
+  props.close()
 }
 </script>
 
