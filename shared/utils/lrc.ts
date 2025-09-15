@@ -3,7 +3,7 @@ import subsrt from 'subsrt-ts'
 export type LrcMeta = Record<string, string>
 export type LrcLine = { time: number; text: string; raw: string }
 export type LrcLineHandler = (line: string, ctx: Lrc) => boolean|void|undefined
-export type LrcFormatConfig = { to: string; meta: boolean }
+export type LrcFormatConfig = { to?: string; meta: boolean }
 
 export class Lrc {
   meta: LrcMeta = {}
@@ -12,6 +12,12 @@ export class Lrc {
     return raw ? new LrcBuilder(raw).build() : new Lrc()
   }
   static readonly FORMAT_TYPES = [...new Set(['lrc','srt','txt',...subsrt.list().sort()])]
+  static formatTime = (time:number) => {
+    if(time === -1) return ''
+    const minutes = Math.floor(time / 60).toString().padStart(2, '0')
+    const seconds = (time % 60).toFixed(2).padStart(5, '0')
+    return `${minutes}:${seconds}`
+  }
   format(config?: LrcFormatConfig): string {
     const { to = 'lrc', meta = false } = config||{}
     if (to === 'txt') {
@@ -21,11 +27,7 @@ export class Lrc {
       ...(meta ? Object.entries(this.meta).map(([k, v]) => `[${k}:${v}]`).concat('') : []),
       ...this.lines.map(({ time, text }) => {
         if (time == -1) return text
-        const minutes = Math.floor(time / 60)
-          .toString()
-          .padStart(2, '0')
-        const seconds = (time % 60).toFixed(2).padStart(5, '0')
-        return `[${minutes}:${seconds}]${text}`
+        return `[${Lrc.formatTime(time)}]${text}`
       }),
     ].join('\n')
 
