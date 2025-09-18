@@ -1,35 +1,53 @@
 <script setup lang="ts">
 const props = defineProps<{
-  modelValue: string
+  lines: LrcLine[]
   time: number
+  refresh: () => void
 }>()
 
-const emit = defineEmits(['update:modelValue'])
-const lrcObj = reactive(new Lrc())
-const updateModelValue = ()=> {
-  emit('update:modelValue',lrcObj.format({meta:true}))
-}
-
-watch(() => props.modelValue, (lrc) => Object.assign(lrcObj,Lrc.from(lrc.trim())), { immediate: true })
-
 const root = ref<HTMLDivElement>()
-const focusLine = (index: number) => root.value?.children[index]?.querySelector('input')?.focus()
+
+const focus = (index: number) => {
+  const rootEl = root.value!
+  let i = index < props.lines.length ? index : 0
+  while (true) {
+    const lineEl = rootEl.children[i] as HTMLDivElement
+    if (lineEl?.style.display !== 'none') {
+      lineEl?.querySelector('input')?.focus()
+      break
+    } else {
+      if (++i >= props.lines.length) {
+        i = 0
+      }
+    }
+  }
+}
 
 const setTime = (line: LrcLine, index: number) => {
   line.time = props.time
-  if (index < lrcObj.lines.length - 1) {
-    focusLine(index + 1)
-  }
-  updateModelValue()
+  focus(index + 1)
+  props.refresh()
 }
+
+
+
+const tip =`
+食用方法：
+ 1. 播放音频
+ 2. 点击一行歌词
+ 3. 按下回车
+`
 </script>
 
 <template>
-  <div ref="root" class="text-lg overflow-y-auto max-h-185">
-    <div v-for="(line, i) in lrcObj.lines" :key="i" class="flex items-center justify-between">
-      <span class="w-16 text-sm text-maincolor text-right mr-2 font-bold">{{ Lrc.formatTime(line.time) }}</span>
-      <input type="text" class="flex-1 bg-transparent outline-0 focus:b-b" @keydown="e=>e.preventDefault()" @keydown.enter="setTime(line, i)"
-        :value="line.text" />
+  <div class="flex">
+    <div ref="root" class="w-4/5 text-lg overflow-y-auto max-h-185" v-if="lines?.length">
+      <div v-for="(line, i) in lines" :key="i" class="flex items-center justify-between gap-2" v-show="line.raw">
+        <span class="text-md text-maincolor flex justify-center">[{{ Lrc.formatTime(line.time)||'暂无时间'}}]</span>
+        <input type="text" class="flex-1 bg-transparent b-b b-transparent outline-0 focus:b-maincolor" @keydown="e => e.preventDefault()"
+          @keydown.enter.prevent="setTime(line, i)" :value="line.text" />
+      </div>
     </div>
+    <div class="b-l-2 pl3 ml3 dark:b-#333"><pre v-text="tip"></pre></div>
   </div>
 </template>

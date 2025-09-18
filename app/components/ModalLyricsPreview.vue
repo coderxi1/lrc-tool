@@ -91,10 +91,9 @@ const save = async () => saveTextAsFile(textareaValue.value || '', {
 })
 
 const toEditor = () => {
-  const name = props.song.name || `${props.song.platform}${props.song.platformId}`.toUpperCase()
   const editorStore = useEditorStore()
-  editorStore.newLyricFile(name, lrcValue.value)
-  useRouter().push('/editor?file=' + name)
+  editorStore.lrcRaw = lrcValue.value
+  useRouter().push('/editor')
   props.close()
 }
 </script>

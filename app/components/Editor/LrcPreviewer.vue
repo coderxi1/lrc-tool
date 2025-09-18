@@ -1,19 +1,15 @@
 <script setup lang="ts">
 const props = defineProps<{
-  lrc: string
+  lines: LrcLine[]
   time: number
 }>()
-
-const lines = ref<LrcLine[]>([])
-
-watch(() => props.lrc, (lrc) => { lines.value = Lrc.from(lrc.trim()).lines }, { immediate: true })
 
 const lineHeight = 2.5
 const containerHeight = 20
 const visibleLines = containerHeight / lineHeight
 
-const currentIndex = computed(() => {
-  const arr = lines.value
+const activeIndex = computed(() => {
+  const arr = props.lines
   if (!arr.length) return 0
   let left = 0, right = arr.length - 1, t = props.time
   let idx = 0
@@ -30,8 +26,8 @@ const currentIndex = computed(() => {
 })
 
 const activeIndexes = computed(() => {
-  const idx = currentIndex.value
-  const arr = lines.value
+  const idx = activeIndex.value
+  const arr = props.lines
   const result = [idx]
   for (let i = idx - 1; i >= 0; i--) {
     if (arr[i]!.time === arr[idx]!.time) result.push(i)
@@ -46,8 +42,8 @@ const activeIndexes = computed(() => {
 
 const offsetY = computed(() => {
   const centerOffset = (visibleLines / 2 - 0.5) * lineHeight
-  let y = -(currentIndex.value * lineHeight - centerOffset)
-  const totalHeight = lines.value.length * lineHeight
+  let y = -(activeIndex.value * lineHeight - centerOffset)
+  const totalHeight = props.lines.length * lineHeight
   if (totalHeight <= containerHeight) {
     return 0
   } else {

@@ -24,7 +24,7 @@ export class Lrc {
       return this.lines.map(({ text }) => text).join('\n')
     }
     const lrc = [
-      ...(meta ? Object.entries(this.meta).map(([k, v]) => `[${k}:${v}]`).concat('') : []),
+      ...(meta ? Object.entries(this.meta).map(([k, v]) => `[${k}:${v}]`).concat('') : []).filter(Boolean),
       ...this.lines.map(({ time, text }) => {
         if (time == -1) return text
         return `[${Lrc.formatTime(time)}]${text}`
